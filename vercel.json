@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "buildCommand": "echo 'Static site - no build required'",
+  "outputDirectory": ".",
+  "rewrites": [
+    { "source": "/", "destination": "/index-2.html" },
+    { "source": "/index.html", "destination": "/index-2.html" }
+  ]
+}
