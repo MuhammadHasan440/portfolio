@@ -1347,9 +1347,8 @@
         return div.innerHTML;
     }
 })();
-
 // ============================================
-// CONTACT FORM - COMPLETE WORKING VERSION
+// CONTACT FORM - COMPLETE WORKING WITH RESEND
 // ============================================
 (function() {
     const form = document.getElementById('contactForm');
@@ -1369,6 +1368,9 @@
         const hostname = window.location.hostname;
         const port = window.location.port;
         
+        console.log('🌐 Hostname:', hostname);
+        console.log('🔌 Port:', port);
+        
         // Local development
         if (hostname === 'localhost' || hostname === '127.0.0.1') {
             // If HTML and API are on same port
@@ -1378,13 +1380,18 @@
             return 'http://localhost:8000/send-email';
         }
         
-        // Live/Production
-        // Your server.js is at root, so use relative path
+        // Live/Production - Vercel
         return '/send-email';
     }
 
     const API_URL = getApiUrl();
     console.log('📧 API URL:', API_URL);
+
+    // ============================================
+    // STATE MANAGEMENT
+    // ============================================
+    let lastFormData = null;
+    let isSubmitting = false;
 
     // ============================================
     // SILENT API TEST (No user impact)
@@ -1413,6 +1420,172 @@
     setTimeout(testApiConnection, 1000);
 
     // ============================================
+    // SHOW MESSAGE FUNCTION
+    // ============================================
+    function showMessage(type, title, content, showResend = false) {
+        const icons = {
+            success: 'ri-checkbox-circle-fill',
+            danger: 'ri-error-warning-fill',
+            warning: 'ri-information-line',
+            info: 'ri-information-fill'
+        };
+        
+        const colors = {
+            success: 'alert-success',
+            danger: 'alert-danger',
+            warning: 'alert-warning',
+            info: 'alert-info'
+        };
+        
+        messageDiv.className = `mt-3 alert ${colors[type]}`;
+        messageDiv.innerHTML = `
+            <div class="d-flex align-items-start">
+                <i class="${icons[type]} me-2" style="font-size: 20px; margin-top: 2px;"></i>
+                <div style="flex: 1;">
+                    <strong>${title}</strong>
+                    <br>${content}
+                    ${showResend ? `
+                        <br><br>
+                        <button class="btn btn-sm btn-outline-primary-2 resend-btn" onclick="resendMessage()">
+                            <i class="ri-refresh-line"></i> Try Again
+                        </button>
+                    ` : ''}
+                </div>
+            </div>
+        `;
+        messageDiv.style.display = 'block';
+    }
+
+    // ============================================
+    // RESEND FUNCTION
+    // ============================================
+    window.resendMessage = async function() {
+        if (!lastFormData) {
+            showMessage('warning', 'No message to resend', 'Please fill the form again.');
+            return;
+        }
+        
+        if (isSubmitting) {
+            showMessage('warning', 'Already sending', 'Please wait for the current request to complete.');
+            return;
+        }
+        
+        console.log('🔄 Resending message...');
+        await sendMessage(lastFormData, true);
+    };
+
+    // ============================================
+    // SEND MESSAGE FUNCTION
+    // ============================================
+    async function sendMessage(formData, isResend = false) {
+        if (isSubmitting) return;
+        
+        isSubmitting = true;
+        submitBtn.disabled = true;
+        loading.classList.remove('d-none');
+        submitBtn.innerHTML = isResend ? 'Resending...' : 'Sending...';
+        
+        // Clear previous messages
+        messageDiv.innerHTML = '';
+        messageDiv.className = 'mt-3';
+        messageDiv.style.display = 'block';
+
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+                signal: AbortSignal.timeout(15000) // 15 second timeout
+            });
+
+            console.log('📥 Status:', response.status);
+            
+            let result;
+            try {
+                const text = await response.text();
+                console.log('📥 Raw response:', text);
+                result = JSON.parse(text);
+            } catch (e) {
+                result = { success: false, message: 'Invalid response from server' };
+            }
+            
+            console.log('📥 Response:', result);
+
+            if (response.ok && result.success) {
+                // SUCCESS
+                showMessage(
+                    'success',
+                    result.message || 'Thank you! Your message has been sent successfully.',
+                    '<small class="text-300">I\'ll get back to you within 24 hours.</small>',
+                    false
+                );
+                form.reset();
+                lastFormData = null;
+                
+                // Hide success after 10 seconds
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 10000);
+            } else {
+                // Server error
+                showMessage(
+                    'danger',
+                    result.message || 'Something went wrong. Please try again.',
+                    '<small class="text-300">The server returned an error. Please try again.</small>',
+                    true
+                );
+                // Save data for resend
+                if (!isResend) {
+                    lastFormData = formData;
+                }
+            }
+        } catch (error) {
+            console.error('❌ Error:', error);
+            
+            let errorMessage = 'Please try again in a few moments, or contact me directly:';
+            
+            if (error.name === 'AbortError') {
+                errorMessage = 'The request timed out. Please check your connection and try again.';
+            } else if (error.message === 'Failed to fetch') {
+                errorMessage = 'Cannot connect to the server. Please check your internet connection.';
+            }
+            
+            showMessage(
+                'warning',
+                'Unable to send message right now.',
+                `
+                    ${errorMessage}
+                    <br><br>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="mailto:hasanwork440@gmail.com" class="text-primary-2">
+                            <i class="ri-mail-fill"></i> hasanwork440@gmail.com
+                        </a>
+                        <a href="tel:+923348422878" class="text-primary-2">
+                            <i class="ri-phone-fill"></i> +923348422878
+                        </a>
+                    </div>
+                    <br>
+                    <small class="text-300">(API URL: ${API_URL})</small>
+                `,
+                true
+            );
+            
+            // Save data for resend
+            if (!isResend) {
+                lastFormData = formData;
+            }
+        } finally {
+            // Re-enable button
+            isSubmitting = false;
+            submitBtn.disabled = false;
+            loading.classList.add('d-none');
+            submitBtn.innerHTML = 'Send Message <i class="ri-arrow-right-up-line"></i>';
+        }
+    }
+
+    // ============================================
     // FORM SUBMIT HANDLER
     // ============================================
     form.addEventListener('submit', async function(e) {
@@ -1420,25 +1593,16 @@
         
         console.log('📨 Form submitted');
         
-        // Reset previous messages
-        messageDiv.innerHTML = '';
-        messageDiv.className = 'mt-3';
-        messageDiv.style.display = 'block';
-        
         // Validate form
         if (!validateForm()) {
-            messageDiv.className = 'mt-3 alert alert-danger';
-            messageDiv.innerHTML = `
-                <i class="ri-error-warning-fill me-2"></i>
-                Please fill in all required fields correctly.
-            `;
+            showMessage(
+                'danger',
+                'Please fill in all required fields correctly.',
+                '<small class="text-300">Check the highlighted fields and try again.</small>',
+                false
+            );
             return;
         }
-
-        // Disable button and show loading
-        submitBtn.disabled = true;
-        loading.classList.remove('d-none');
-        submitBtn.innerHTML = 'Sending...';
 
         // Get form data
         const formData = {
@@ -1452,84 +1616,11 @@
         console.log('📤 Sending to:', API_URL);
         console.log('📤 Data:', formData);
 
-        try {
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-                signal: AbortSignal.timeout(10000)
-            });
-
-            console.log('📥 Status:', response.status);
-            
-            let result;
-            try {
-                result = await response.json();
-            } catch (e) {
-                result = { success: false, message: 'Invalid response from server' };
-            }
-            
-            console.log('📥 Response:', result);
-
-            if (response.ok && result.success) {
-                // SUCCESS - Happy path
-                messageDiv.className = 'mt-3 alert alert-success';
-                messageDiv.innerHTML = `
-                    <div class="d-flex align-items-center">
-                        <i class="ri-checkbox-circle-fill me-2" style="font-size: 20px;"></i>
-                        <div>
-                            <strong>${result.message || 'Thank you! Your message has been sent successfully.'}</strong>
-                            <br><small class="text-300">I'll get back to you within 24 hours.</small>
-                        </div>
-                    </div>
-                `;
-                form.reset();
-                
-                // Hide success after 8 seconds
-                setTimeout(() => {
-                    messageDiv.style.display = 'none';
-                }, 8000);
-            } else {
-                // Server error
-                messageDiv.className = 'mt-3 alert alert-danger';
-                messageDiv.innerHTML = `
-                    <i class="ri-error-warning-fill me-2"></i>
-                    ${result.message || 'Something went wrong. Please try again.'}
-                `;
-            }
-        } catch (error) {
-            console.error('❌ Error:', error);
-            
-            // User-friendly fallback
-            messageDiv.className = 'mt-3 alert alert-warning';
-            messageDiv.innerHTML = `
-                <div class="d-flex align-items-start">
-                    <i class="ri-information-line me-2" style="font-size: 20px;"></i>
-                    <div>
-                        <strong>Unable to send message right now.</strong>
-                        <br>Please try again in a few moments, or contact me directly:
-                        <br><br>
-                        <div class="d-flex flex-wrap gap-3">
-                            <a href="mailto:hasanwork440@gmail.com" class="text-primary-2">
-                                <i class="ri-mail-fill"></i> hasanwork440@gmail.com
-                            </a>
-                            <a href="tel:+923348422878" class="text-primary-2">
-                                <i class="ri-phone-fill"></i> +923348422878
-                            </a>
-                        </div>
-                        <br>
-                        <small class="text-300">(API URL: ${API_URL})</small>
-                    </div>
-                </div>
-            `;
-        } finally {
-            // Re-enable button
-            submitBtn.disabled = false;
-            loading.classList.add('d-none');
-            submitBtn.innerHTML = 'Send Message <i class="ri-arrow-right-up-line"></i>';
-        }
+        // Save for resend
+        lastFormData = formData;
+        
+        // Send message
+        await sendMessage(formData);
     });
 
     // ============================================
@@ -1579,7 +1670,7 @@
         });
     }
 
-    console.log('✅ Contact form initialized');
+    console.log('✅ Contact form initialized with resend functionality');
 
 })();
 </script>
