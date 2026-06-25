@@ -1,27 +1,10 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "builds": [
-    {
-      "src": "server.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/send-email",
-      "dest": "/server.js"
-    },
-    {
-      "src": "/api/send-email",
-      "dest": "/server.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index-2.html"
-    }
-  ],
-  "env": {
-    "SMTP_HOST": "smtp.gmail.com",
-    "SMTP_PORT": "587"
-  }
+  "framework": null,
+  "buildCommand": "echo 'Static site - no build required'",
+  "outputDirectory": ".",
+  "rewrites": [
+    { "source": "/", "destination": "/index-2.html" },
+    { "source": "/index.html", "destination": "/index-2.html" }
+  ]
 }
