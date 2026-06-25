@@ -10,15 +10,39 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8000;
 
-// Middleware
+// ============================================
+// CORS - FIXED FOR PRODUCTION
+// ============================================
 app.use(cors({
     origin: '*',
-    methods: ['POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type']
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+// Handle preflight requests
+app.options('*', cors());
+
 app.use(express.json());
 
+// ============================================
+// ROOT ROUTE - API STATUS CHECK (FIX FOR 404)
+// ============================================
+app.get('/', (req, res) => {
+    res.json({
+        success: true,
+        message: 'API is running on Vercel!',
+        endpoints: {
+            'GET /': 'Check API status',
+            'POST /send-email': 'Send email'
+        },
+        environment: process.env.NODE_ENV || 'development',
+        timestamp: new Date().toISOString()
+    });
+});
+
+// ============================================
 // SMTP Configuration
+// ============================================
 const smtpConfig = {
     host: process.env.SMTP_HOST || 'smtp.gmail.com',
     port: parseInt(process.env.SMTP_PORT) || 587,
@@ -40,14 +64,16 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-// Verify transporter
-transporter.verify(function(error, success) {
-    if (error) {
-        console.error('❌ SMTP Connection Error:', error.message);
-    } else {
-        console.log('✅ SMTP Server is ready');
-    }
-});
+// Verify transporter (only in development)
+if (process.env.NODE_ENV !== 'production') {
+    transporter.verify(function(error, success) {
+        if (error) {
+            console.error('❌ SMTP Connection Error:', error.message);
+        } else {
+            console.log('✅ SMTP Server is ready');
+        }
+    });
+}
 
 // ============================================
 // PREMIUM EMAIL TEMPLATES
@@ -468,6 +494,9 @@ function getAutoReplyTemplate(data) {
 // SEND EMAIL ENDPOINT
 // ============================================
 app.post('/send-email', async (req, res) => {
+    console.log('📨 Received form submission');
+    console.log('📤 Body:', req.body);
+    
     try {
         const data = req.body;
         
@@ -504,6 +533,8 @@ app.post('/send-email', async (req, res) => {
             replyTo: email,
         });
 
+        console.log('✅ Main email sent');
+
         // Send auto-reply with premium template
         const autoHtml = getAutoReplyTemplate({ name, subject });
         await transporter.sendMail({
@@ -513,13 +544,15 @@ app.post('/send-email', async (req, res) => {
             html: autoHtml,
         });
 
+        console.log('✅ Auto-reply sent');
+
         res.json({
             success: true,
-            message: 'Message sent successfully!'
+            message: 'Message sent successfully! I\'ll get back to you soon.'
         });
 
     } catch (error) {
-        console.error('Error:', error);
+        console.error('❌ Error:', error);
         res.status(500).json({
             success: false,
             message: 'Failed to send email. Please try again.'
@@ -527,7 +560,18 @@ app.post('/send-email', async (req, res) => {
     }
 });
 
-// Start server
-app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
-});
+// ============================================
+// EXPORT FOR VERCEL (SERVERLESS) - IMPORTANT!
+// ============================================
+module.exports = app;
+
+// ============================================
+// START SERVER (LOCAL ONLY)
+// ============================================
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`🚀 Server running on http://localhost:${PORT}`);
+        console.log(`📧 POST to http://localhost:${PORT}/send-email`);
+        console.log(`✅ GET http://localhost:${PORT}/ to check status`);
+    });
+}
