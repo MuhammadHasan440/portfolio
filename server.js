@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 8000;
 // Middleware
 app.use(cors({
     origin: '*',
-    methods: ['GET', 'POST', 'OPTIONS'],
+    methods: ['POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type']
 }));
 app.use(express.json());
@@ -40,23 +40,19 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-// ============================================
-// ADD THIS - Test route to check if API is working
-// ============================================
-app.get('/', (req, res) => {
-    res.json({
-        success: true,
-        message: 'API is running on Vercel!',
-        endpoints: {
-            'GET /': 'Check API status',
-            'POST /send-email': 'Send email'
-        }
-    });
+// Verify transporter
+transporter.verify(function(error, success) {
+    if (error) {
+        console.error('❌ SMTP Connection Error:', error.message);
+    } else {
+        console.log('✅ SMTP Server is ready');
+    }
 });
 
 // ============================================
 // PREMIUM EMAIL TEMPLATES
 // ============================================
+
 function getMainEmailTemplate(data) {
     const { name, email, phone, subject, message } = data;
     const date = new Date().toLocaleString('en-US', {
@@ -472,8 +468,6 @@ function getAutoReplyTemplate(data) {
 // SEND EMAIL ENDPOINT
 // ============================================
 app.post('/send-email', async (req, res) => {
-    console.log('📨 Received form submission');
-    
     try {
         const data = req.body;
         
@@ -510,8 +504,6 @@ app.post('/send-email', async (req, res) => {
             replyTo: email,
         });
 
-        console.log('✅ Main email sent');
-
         // Send auto-reply with premium template
         const autoHtml = getAutoReplyTemplate({ name, subject });
         await transporter.sendMail({
@@ -521,15 +513,13 @@ app.post('/send-email', async (req, res) => {
             html: autoHtml,
         });
 
-        console.log('✅ Auto-reply sent');
-
         res.json({
             success: true,
-            message: 'Message sent successfully! I\'ll get back to you soon.'
+            message: 'Message sent successfully!'
         });
 
     } catch (error) {
-        console.error('❌ Error:', error);
+        console.error('Error:', error);
         res.status(500).json({
             success: false,
             message: 'Failed to send email. Please try again.'
@@ -537,17 +527,7 @@ app.post('/send-email', async (req, res) => {
     }
 });
 
-// ============================================
-// EXPORT FOR VERCEL (ADD THIS)
-// ============================================
-module.exports = app;
-
-// ============================================
-// START SERVER (Local only)
-// ============================================
-if (require.main === module) {
-    app.listen(PORT, () => {
-        console.log(`🚀 Server running on http://localhost:${PORT}`);
-        console.log(`📧 POST to http://localhost:${PORT}/send-email`);
-    });
-}
+// Start server
+app.listen(PORT, () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
+});
