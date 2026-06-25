@@ -1303,7 +1303,7 @@
     <script src="assets/js/vendors/aat.min.js"></script>
     <script src="assets/js/main.js"></script>
     <script>
-// GitHub Repos (unchanged - works fine)
+// GitHub Repos - Working fine
 (function () {
     const GITHUB_USER = 'MuhammadHasan440';
     const REPOS_LIMIT = 15;
@@ -1349,32 +1349,36 @@
 })();
 
 // ============================================
-// CONTACT FORM - FIXED VERSION
+// CONTACT FORM - FIXED FOR LIVE SITE
 // ============================================
-// Contact Form Handler - Updated for Live
 (function() {
     const form = document.getElementById('contactForm');
     const submitBtn = document.getElementById('submitBtn');
     const loading = document.getElementById('formLoading');
     const messageDiv = document.getElementById('formMessage');
 
-    if (!form) return;
+    if (!form) {
+        console.log('Contact form not found');
+        return;
+    }
 
     // ============================================
-    // AUTO-DETECT API URL
+    // API URL - Works for both Local and Live
     // ============================================
     function getApiUrl() {
         const hostname = window.location.hostname;
+        const protocol = window.location.protocol;
         
         // Local development
-        if (hostname === 'localhost' || hostname === '127.0.0.1') {
+        if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '') {
             return 'http://localhost:8000/send-email';
         }
         
-        // Live/Production - CHANGE THIS TO YOUR LIVE API URL
-        // If your API is on the same domain:
-        return '/api/send-email';
-        // OR if API is on a different domain/subdomain:
+        // Live/Production - Use relative path or full URL
+        // Option 1: If API is on same domain (recommended)
+        return '/send-email';
+        
+        // Option 2: If API is on different domain (uncomment and change)
         // return 'https://your-api-domain.com/send-email';
     }
 
@@ -1382,7 +1386,7 @@
     console.log('📧 API URL:', API_URL);
 
     // ============================================
-    // TEST API CONNECTION
+    // TEST API CONNECTION (Silent - No user impact)
     // ============================================
     async function testApiConnection() {
         try {
@@ -1391,32 +1395,24 @@
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                }
+                },
+                // Short timeout so it doesn't hang
+                signal: AbortSignal.timeout(3000)
             });
+            
             if (response.ok) {
                 console.log('✅ API is reachable');
-                messageDiv.className = 'mt-3 alert alert-success';
-                messageDiv.innerHTML = `
-                    <i class="ri-checkbox-circle-fill me-2"></i>
-                    ✅ Connected to email service. You can send messages now.
-                `;
-                setTimeout(() => {
-                    messageDiv.style.display = 'none';
-                }, 3000);
+            } else {
+                console.warn('⚠️ API returned:', response.status);
             }
         } catch (error) {
-            console.error('❌ API is NOT reachable:', error.message);
-            messageDiv.className = 'mt-3 alert alert-warning';
-            messageDiv.innerHTML = `
-                <i class="ri-information-line me-2"></i>
-                ⚠️ Cannot connect to email service. Please check your connection.
-                <br><small>API URL: ${API_URL}</small>
-            `;
+            // Silent fail - don't show error to user
+            console.log('ℹ️ API test skipped (server may not be running)');
         }
     }
 
-    // Test on page load
-    testApiConnection();
+    // Test silently in background
+    setTimeout(testApiConnection, 2000);
 
     // ============================================
     // FORM SUBMIT HANDLER
@@ -1426,21 +1422,28 @@
         
         console.log('📨 Form submitted');
         
-        // Reset messages
+        // Reset previous messages
         messageDiv.innerHTML = '';
         messageDiv.className = 'mt-3';
         messageDiv.style.display = 'block';
         
-        // Validate
+        // Validate form
         if (!validateForm()) {
-            console.log('❌ Validation failed');
+            // Show validation error without page reload
+            messageDiv.className = 'mt-3 alert alert-danger';
+            messageDiv.innerHTML = `
+                <i class="ri-error-warning-fill me-2"></i>
+                Please fill in all required fields correctly.
+            `;
             return;
         }
 
+        // Disable button and show loading
         submitBtn.disabled = true;
         loading.classList.remove('d-none');
         submitBtn.innerHTML = 'Sending...';
 
+        // Get form data
         const formData = {
             name: document.getElementById('name').value.trim(),
             email: document.getElementById('email').value.trim(),
@@ -1457,7 +1460,9 @@
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(formData),
+                // Add timeout so it doesn't hang forever
+                signal: AbortSignal.timeout(10000)
             });
 
             console.log('📥 Status:', response.status);
@@ -1466,39 +1471,44 @@
             console.log('📥 Response:', result);
 
             if (response.ok && result.success) {
+                // SUCCESS - Happy path for user
                 messageDiv.className = 'mt-3 alert alert-success';
                 messageDiv.innerHTML = `
                     <i class="ri-checkbox-circle-fill me-2"></i>
-                    ✅ ${result.message || 'Message sent successfully!'}
+                    ✅ ${result.message || 'Thank you! Your message has been sent successfully.'}
                 `;
                 form.reset();
                 
+                // Hide success message after 8 seconds
                 setTimeout(() => {
                     messageDiv.style.display = 'none';
-                }, 10000);
+                }, 8000);
             } else {
+                // Server returned error
                 messageDiv.className = 'mt-3 alert alert-danger';
                 messageDiv.innerHTML = `
                     <i class="ri-error-warning-fill me-2"></i>
-                    ❌ ${result.message || 'Failed to send message'}
+                    ${result.message || 'Something went wrong. Please try again.'}
                 `;
             }
         } catch (error) {
-            console.error('❌ Network Error:', error);
-            messageDiv.className = 'mt-3 alert alert-danger';
+            console.error('❌ Error:', error);
+            
+            // User-friendly error message - No technical jargon
+            messageDiv.className = 'mt-3 alert alert-warning';
             messageDiv.innerHTML = `
-                <i class="ri-error-warning-fill me-2"></i>
-                <strong>Network Error - Cannot connect to server!</strong>
-                <br>Please make sure:
-                <ul class="mt-2 mb-0">
-                    <li>Server is running: <code>npm run dev</code></li>
-                    <li>API URL is correct: <code>${API_URL}</code></li>
-                    <li>No firewall blocking the port</li>
-                </ul>
-                <br>
-                <small>Tip: If this is a live site, make sure your API is deployed.</small>
+                <i class="ri-information-line me-2"></i>
+                <strong>Unable to send message right now.</strong>
+                <br>Please try again in a few moments, or contact me directly via email or phone.
+                <br><br>
+                <small class="text-300">
+                    📧 <a href="mailto:hasanwork440@gmail.com" class="text-primary-2">hasanwork440@gmail.com</a>
+                    &nbsp;|&nbsp;
+                    📞 <a href="tel:+923348422878" class="text-primary-2">+923348422878</a>
+                </small>
             `;
         } finally {
+            // Re-enable button and hide loading
             submitBtn.disabled = false;
             loading.classList.add('d-none');
             submitBtn.innerHTML = 'Send Message <i class="ri-arrow-right-up-line"></i>';
@@ -1520,6 +1530,7 @@
             }
         });
 
+        // Validate email
         const email = document.getElementById('email');
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (email.value.trim() && !emailRegex.test(email.value.trim())) {
@@ -1530,7 +1541,9 @@
         return isValid;
     }
 
-    // Real-time validation
+    // ============================================
+    // REAL-TIME VALIDATION (User-friendly)
+    // ============================================
     form.querySelectorAll('input[required], textarea[required]').forEach(input => {
         input.addEventListener('input', function() {
             if (this.classList.contains('is-invalid') && this.value.trim()) {
@@ -1538,6 +1551,19 @@
             }
         });
     });
+
+    // Email validation on input
+    const emailInput = document.getElementById('email');
+    if (emailInput) {
+        emailInput.addEventListener('input', function() {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (this.classList.contains('is-invalid') && emailRegex.test(this.value.trim())) {
+                this.classList.remove('is-invalid');
+            }
+        });
+    }
+
+    console.log('✅ Contact form initialized');
 
 })();
 </script>
