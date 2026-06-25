@@ -1,26 +1,11 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  
   "framework": null,
   "buildCommand": "echo 'Static site - no build required'",
   "outputDirectory": ".",
-  "builds": [
-    {
-      "src": "server.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/send-email",
-      "dest": "/server.js"
-    },
-    {
-      "src": "/",
-      "dest": "/index-2.html"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index-2.html"
-    }
+  "rewrites": [
+    { "source": "/", "destination": "/index-2.html" },
+    { "source": "/index.html", "destination": "/index-2.html" }
   ]
 }
