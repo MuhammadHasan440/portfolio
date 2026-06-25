@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Support - Umar.dev</title>
+    <title>Support - Hasan.dev</title>
     <script src="assets/js/vendors/color-modes.js"></script>
     <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/template/favicon-gradient.svg" />
     <link rel="stylesheet" href="assets/css/vendors/bootstrap.min.css" />
@@ -19,6 +19,40 @@
         rel="stylesheet" />
     <link rel="stylesheet" href="assets/css/main.css" />
     <style>
+        :root {
+            --tc-theme-primary: #DC2626;
+            --tc-theme-primary-2: #EF4444;
+            --tc-theme-secondary: #991B1B;
+            --tc-neutral-300: #9CA3AF;
+        }
+        
+        .text-primary-2 { color: #EF4444 !important; }
+        
+        .btn-primary-2 {
+            background: linear-gradient(135deg, #DC2626, #991B1B) !important;
+            border: none !important;
+            color: #ffffff !important;
+        }
+        
+        .btn-primary-2:hover {
+            background: linear-gradient(135deg, #991B1B, #7F1D1D) !important;
+        }
+        
+        .text-linear-4 {
+            background: linear-gradient(135deg, #DC2626, #EF4444, #F87171);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .fill-primary-2 { fill: #EF4444 !important; }
+        .nav-link:hover { color: #EF4444 !important; }
+        .nav-link.active { color: #EF4444 !important; }
+        .link-hover:hover { color: #EF4444 !important; }
+        
+        /* ============================================
+           SUPPORT PAGE SPECIFIC STYLES
+           ============================================ */
         .support-faq .accordion-button {
             background: transparent;
             color: inherit;
@@ -26,23 +60,336 @@
         }
 
         .support-faq .accordion-button:not(.collapsed) {
-            color: var(--tc-theme-primary-2, #A8FF53);
+            color: #EF4444 !important;
             background: transparent;
         }
 
         .support-faq .accordion-item {
             background: transparent;
-            border-color: var(--tc-border-1, rgba(255, 255, 255, 0.1));
+            border-color: rgba(220, 38, 38, 0.2) !important;
         }
 
         .support-faq .accordion-body {
-            color: var(--tc-neutral-300, #8F8F92);
+            color: var(--tc-neutral-300, #9CA3AF);
             line-height: 1.7;
         }
 
+        .support-faq .accordion-body a {
+            color: #EF4444;
+        }
+
+        .support-faq .accordion-body a:hover {
+            color: #DC2626;
+        }
+
+        .support-faq .accordion-body .text-dark {
+            color: #ffffff !important;
+        }
+
+        [data-bs-theme="light"] .support-faq .accordion-body .text-dark {
+            color: #1F1F24 !important;
+        }
+
         .support-card p {
-            color: var(--tc-neutral-300, #8F8F92);
+            color: var(--tc-neutral-300, #9CA3AF);
             line-height: 1.7;
+        }
+
+        .support-card a {
+            color: #EF4444 !important;
+        }
+
+        .support-card a:hover {
+            color: #DC2626 !important;
+        }
+
+        .support-card h6 {
+            color: #ffffff;
+        }
+
+        [data-bs-theme="light"] .support-card h6 {
+            color: #1F1F24;
+        }
+
+        .support-card .fs-7 {
+            color: var(--tc-neutral-300, #9CA3AF);
+        }
+
+        [data-bs-theme="light"] .support-card .fs-7 {
+            color: #4a4a4a;
+        }
+
+        .card-servies-2 {
+            border: 1px solid rgba(220, 38, 38, 0.2) !important;
+            transition: all 0.3s ease;
+        }
+
+        .card-servies-2:hover {
+            border-color: rgba(220, 38, 38, 0.6) !important;
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.15) !important;
+        }
+
+        [data-bs-theme="light"] .card-servies-2 {
+            background: #FEF2F2 !important;
+            border-color: rgba(220, 38, 38, 0.15) !important;
+        }
+
+        [data-bs-theme="light"] .card-servies-2:hover {
+            border-color: #DC2626 !important;
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.1) !important;
+        }
+
+        /* ============================================
+           SECTION HERO - Same as Privacy Page
+           ============================================ */
+        .section-hero-2 .border {
+            border-color: rgba(220, 38, 38, 0.3) !important;
+        }
+
+        [data-bs-theme="light"] .section-hero-2 .border {
+            border-color: rgba(220, 38, 38, 0.2) !important;
+        }
+
+        .section-hero-2 h1 {
+            color: #ffffff;
+        }
+
+        [data-bs-theme="light"] .section-hero-2 h1 {
+            color: #1F1F24;
+        }
+
+        .section-hero-2 .text-300 {
+            color: var(--tc-neutral-300, #9CA3AF);
+        }
+
+        [data-bs-theme="light"] .section-hero-2 .text-300 {
+            color: #4a4a4a;
+        }
+
+        /* ============================================
+           BOX LINEAR ANIMATION - Same as Privacy
+           ============================================ */
+        .box-linear-animation {
+            background: linear-gradient(180deg, rgba(220, 38, 38, 0.05) 0%, rgba(0, 0, 0, 0) 100%) !important;
+        }
+
+        [data-bs-theme="light"] .box-linear-animation {
+            background: linear-gradient(180deg, rgba(220, 38, 38, 0.08) 0%, rgba(255, 255, 255, 0) 100%) !important;
+        }
+
+        /* ============================================
+           BORDER COLORS - Same as Privacy
+           ============================================ */
+        .border {
+            border-color: rgba(220, 38, 38, 0.3) !important;
+        }
+
+        .border-1 {
+            border-color: rgba(220, 38, 38, 0.3) !important;
+        }
+
+        .border-top {
+            border-color: rgba(220, 38, 38, 0.3) !important;
+        }
+
+        .border-bottom {
+            border-color: rgba(220, 38, 38, 0.2) !important;
+        }
+
+        [data-bs-theme="light"] .border,
+        [data-bs-theme="light"] .border-1,
+        [data-bs-theme="light"] .border-top {
+            border-color: rgba(220, 38, 38, 0.2) !important;
+        }
+
+        [data-bs-theme="light"] .border-bottom {
+            border-color: rgba(220, 38, 38, 0.15) !important;
+        }
+
+        /* ============================================
+           NAVBAR - Same as Privacy
+           ============================================ */
+        .navbar-home-2 {
+            border-color: rgba(220, 38, 38, 0.3) !important;
+        }
+
+        [data-bs-theme="light"] .navbar-home-2 {
+            border-color: rgba(220, 38, 38, 0.2) !important;
+        }
+
+        .navbar-home-2 .nav-link {
+            color: var(--tc-neutral-300, #9CA3AF);
+        }
+
+        .navbar-home-2 .nav-link:hover,
+        .navbar-home-2 .nav-link.active {
+            color: #EF4444 !important;
+        }
+
+        /* ============================================
+           OFF CANVAS - Same as Privacy
+           ============================================ */
+        .offCanvas__info {
+            background: #0a0a0a !important;
+            border-left: 1px solid rgba(220, 38, 38, 0.3) !important;
+        }
+
+        [data-bs-theme="light"] .offCanvas__info {
+            background: #ffffff !important;
+            border-left: 1px solid rgba(220, 38, 38, 0.2) !important;
+        }
+
+        .offCanvas__info .text-200 {
+            color: var(--tc-neutral-300, #9CA3AF);
+        }
+
+        [data-bs-theme="light"] .offCanvas__info .text-200 {
+            color: #4a4a4a;
+        }
+
+        .offCanvas__info h3,
+        .offCanvas__info .text-400,
+        .offCanvas__info .contact-list p {
+            color: #ffffff;
+        }
+
+        [data-bs-theme="light"] .offCanvas__info h3,
+        [data-bs-theme="light"] .offCanvas__info .text-400,
+        [data-bs-theme="light"] .offCanvas__info .contact-list p {
+            color: #1F1F24;
+        }
+
+        /* ============================================
+           MOBILE HEADER - Same as Privacy
+           ============================================ */
+        .mobile-header-wrapper-style {
+            background: #0a0a0a !important;
+        }
+
+        [data-bs-theme="light"] .mobile-header-wrapper-style {
+            background: #ffffff !important;
+        }
+
+        .mobile-header-wrapper-style .text-dark {
+            color: #ffffff !important;
+        }
+
+        [data-bs-theme="light"] .mobile-header-wrapper-style .text-dark {
+            color: #1F1F24 !important;
+        }
+
+        .mobile-header-wrapper-style .nav-link {
+            color: var(--tc-neutral-300, #9CA3AF);
+        }
+
+        [data-bs-theme="light"] .mobile-header-wrapper-style .nav-link {
+            color: #4a4a4a;
+        }
+
+        /* ============================================
+           SOCIAL ICONS - Same as Privacy
+           ============================================ */
+        .navbar-social a,
+        footer .d-flex a,
+        .offCanvas__info .d-flex a {
+            color: var(--tc-neutral-300, #9CA3AF);
+            transition: color 0.3s ease;
+        }
+
+        [data-bs-theme="light"] .navbar-social a,
+        [data-bs-theme="light"] footer .d-flex a,
+        [data-bs-theme="light"] .offCanvas__info .d-flex a {
+            color: #4a4a4a;
+        }
+
+        .navbar-social a:hover,
+        footer .d-flex a:hover,
+        .offCanvas__info .d-flex a:hover {
+            color: #EF4444 !important;
+        }
+
+        /* ============================================
+           BURGER ICON - Same as Privacy
+           ============================================ */
+        .burger-icon-white span {
+            background-color: var(--tc-neutral-300, #9CA3AF);
+        }
+
+        [data-bs-theme="light"] .burger-icon-white span {
+            background-color: #4a4a4a;
+        }
+
+        /* ============================================
+           FOOTER - Same as Privacy
+           ============================================ */
+       
+
+        [data-bs-theme="light"] footer {
+            background: #f8f9fa !important;
+        }
+
+        footer .main-logo span,
+        footer .text-300,
+        footer .navigation a {
+            color: var(--tc-neutral-300, #9CA3AF);
+        }
+
+        [data-bs-theme="light"] footer .main-logo span,
+        [data-bs-theme="light"] footer .text-300,
+        [data-bs-theme="light"] footer .navigation a {
+            color: #4a4a4a;
+        }
+
+        footer .navigation a:hover {
+            color: #EF4444 !important;
+        }
+
+        footer .text-primary-2 {
+            color: #EF4444 !important;
+        }
+
+        /* ============================================
+           BODY - Same as Privacy
+           ============================================ */
+       
+
+        [data-bs-theme="light"] body {
+            background-color: #ffffff !important;
+        }
+
+        /* ============================================
+           DARK/LIGHT SWITCHER - Same as Privacy
+           ============================================ */
+        .dark-light-switcher .ri-sun-fill {
+            color: #FFD700 !important;
+        }
+
+        .dark-light-switcher .ri-contrast-2-line {
+            color: var(--tc-neutral-300, #9CA3AF);
+        }
+
+        [data-bs-theme="light"] .dark-light-switcher .ri-contrast-2-line {
+            color: #4a4a4a;
+        }
+
+        /* ============================================
+           SCROLL BUTTON - Same as Privacy
+           ============================================ */
+        .btn-scroll-top path {
+            stroke: #DC2626 !important;
+        }
+
+        /* ============================================
+           RESPONSIVE - Same as Privacy
+           ============================================ */
+        @media (max-width: 768px) {
+            .offCanvas__info {
+                background: #0a0a0a !important;
+            }
+            
+            [data-bs-theme="light"] .offCanvas__info {
+                background: #ffffff !important;
+            }
         }
     </style>
 </head>
@@ -66,9 +413,9 @@
                         <i class="ri-menu-2-line"></i>
                     </a>
                     <div class="container py-3 px-4">
-                        <a class="navbar-brand d-flex main-logo align-items-center" href="https://umar.dev/">
-                            <img src="assets/imgs/home-page-2/template/favicon.svg" alt="Umar.dev" />
-                            <span class="fs-4 ms-2">Umar.dev</span>
+                        <a class="navbar-brand d-flex main-logo align-items-center" href="index-2.html">
+                            <img src="assets/imgs/home-page-2/template/favicon_red.svg" alt="Hasan.dev" />
+                            <span class="fs-4 ms-2">Hasan</span>
                         </a>
                         <div class="d-none d-lg-flex">
                             <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -86,11 +433,9 @@
                         </div>
                         <div class="navbar-social d-flex align-items-center pe-5 pe-lg-0 me-5 me-lg-0">
                             <div class="d-md-flex d-none gap-3">
-                                <a href="http://facebook.com"><i class="ri-facebook-circle-fill fs-18"></i></a>
-                                <a href="http://twitter.com"><i class="ri-twitter-x-fill fs-18"></i></a>
-                                <a href="https://www.linkedin.com/in/umarxiddiqui/"><i
+                                <a href="https://www.linkedin.com/in/muhammad-hasan-b141b6386"><i
                                         class="ri-linkedin-fill fs-18"></i></a>
-                                <a href="https://github.com/Umarxiddiqui"><i class="ri-github-fill fs-18"></i></a>
+                                <a href="https://github.com/MuhammadHasan440"><i class="ri-github-fill fs-18"></i></a>
                             </div>
                             <div class="burger-icon burger-icon-white border rounded-3">
                                 <span class="burger-icon-top"></span>
@@ -119,20 +464,19 @@
                             collaborate with innovative minds.</p>
                         <div class="mb-3">
                             <span class="text-400 fs-5">Phone Number</span>
-                            <p class="mb-0">+92042021303</p>
+                            <p class="mb-0">+923348422878</p>
                         </div>
                         <div class="mb-3">
                             <span class="text-400 fs-5">Email</span>
-                            <p class="mb-0">siddiquiumar14@gmail.com</p>
+                            <p class="mb-0">hasanwork440@gmail.com</p>
                         </div>
                     </div>
                     <div class="contact-list">
                         <p class="text-400 fs-5 mb-2">Social</p>
                         <div class="d-md-flex d-none gap-3">
-                            <a href="http://facebook.com"><i class="ri-facebook-circle-fill fs-18"></i></a>
-                            <a href="https://www.linkedin.com/in/umarxiddiqui/"><i
+                            <a href="https://www.linkedin.com/in/muhammad-hasan-b141b6386"><i
                                     class="ri-linkedin-fill fs-18"></i></a>
-                            <a href="https://github.com/Umarxiddiqui"><i class="ri-github-fill fs-18"></i></a>
+                            <a href="https://github.com/MuhammadHasan440"><i class="ri-github-fill fs-18"></i></a>
                         </div>
                     </div>
                 </div>
@@ -142,9 +486,9 @@
         <div class="mobile-header-active mobile-header-wrapper-style perfect-scrollbar button-bg-2">
             <div class="mobile-header-wrapper-inner">
                 <div class="mobile-header-logo">
-                    <a class="d-flex main-logo align-items-center d-inline-flex" href="https://umar.dev/">
-                        <img src="assets/imgs/home-page-2/template/favicon.svg" alt="Umar.dev" />
-                        <span class="fs-4 ms-2 text-dark">Umar.dev</span>
+                    <a class="d-flex main-logo align-items-center d-inline-flex" href="index-2.html">
+                        <img src="assets/imgs/home-page-2/template/favicon_red.svg" alt="Hasan.dev" />
+                        <span class="fs-4 ms-2 text-dark">Hasan</span>
                     </a>
                     <div class="burger-icon burger-icon-white border rounded-3">
                         <span class="burger-icon-top"></span>
@@ -184,7 +528,7 @@
                         <div class="d-flex align-items-center mb-3">
                             <svg class="text-primary-2 me-2" xmlns="http://www.w3.org/2000/svg" width="5" height="6"
                                 viewBox="0 0 5 6" fill="none">
-                                <circle cx="2.5" cy="3" r="2.5" fill="#A8FF53" />
+                                <circle cx="2.5" cy="3" r="2.5" fill="#EF4444" />
                             </svg>
                             <span class="text-linear-4 d-flex align-items-center"> Help Center </span>
                         </div>
@@ -209,7 +553,7 @@
                             <h6 class="my-3 fw-medium">Email support</h6>
                             <p class="fs-7 fw-regular mb-3">For project quotes, freelance work, or general questions,
                                 email me and I'll respond within 1–2 business days.</p>
-                            <a href="mailto:siddiquiumar14@gmail.com" class="text-primary-2 fs-7">siddiquiumar14@gmail.com</a>
+                            <a href="mailto:hasanwork440@gmail.com" class="text-primary-2 fs-7">hasanwork440@gmail.com</a>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6">
@@ -218,7 +562,7 @@
                             <h6 class="my-3 fw-medium">Phone</h6>
                             <p class="fs-7 fw-regular mb-3">Available for scheduled calls regarding web &amp; app
                                 development, APIs, or ongoing client work.</p>
-                            <a href="tel:+923042021303" class="text-primary-2 fs-7">+923042021303</a>
+                            <a href="tel:+923348422878" class="text-primary-2 fs-7">+923348422878</a>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-12">
@@ -228,8 +572,8 @@
                             <p class="fs-7 fw-regular mb-3">Connect on LinkedIn or GitHub to view my experience,
                                 portfolio projects, and open-source work.</p>
                             <div class="d-flex flex-wrap gap-3">
-                                <a href="https://www.linkedin.com/in/umarxiddiqui/" class="text-primary-2 fs-7">LinkedIn</a>
-                                <a href="https://github.com/Umarxiddiqui" class="text-primary-2 fs-7">GitHub</a>
+                                <a href="https://www.linkedin.com/in/muhammad-hasan-b141b6386" class="text-primary-2 fs-7">LinkedIn</a>
+                                <a href="https://github.com/MuhammadHasan440" class="text-primary-2 fs-7">GitHub</a>
                             </div>
                         </div>
                     </div>
@@ -244,7 +588,7 @@
                         <div class="d-flex align-items-center mb-4">
                             <svg class="text-primary-2 me-2" xmlns="http://www.w3.org/2000/svg" width="5" height="6"
                                 viewBox="0 0 5 6" fill="none">
-                                <circle cx="2.5" cy="3" r="2.5" fill="#A8FF53" />
+                                <circle cx="2.5" cy="3" r="2.5" fill="#EF4444" />
                             </svg>
                             <span class="text-linear-4"> Frequently asked questions </span>
                         </div>
@@ -258,10 +602,10 @@
                                 </h2>
                                 <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#supportFaq">
                                     <div class="accordion-body">
-                                        I specialize in web &amp; app development using <span
-                                            class="text-secondary-2">Flutter</span>, <span
+                                        I specialize in web development using <span
                                             class="text-secondary-2">React</span>, <span
-                                            class="text-secondary-2">Swift</span>, and <span
+                                            class="text-secondary-2">Next.js</span>, <span
+                                            class="text-secondary-2">Laravel</span>, and <span
                                             class="text-secondary-2">Node.js</span>, along with database design,
                                         RESTful APIs, performance optimization, e-commerce solutions, and AI
                                         integration. See the <a href="index-2.html#services">Services</a> section for
@@ -280,7 +624,7 @@
                                     <div class="accordion-body">
                                         Send a brief overview of your idea via the <a
                                             href="index-2.html#contact">contact form</a> or email. Include your timeline,
-                                        budget range (if any), and whether you need web, mobile, or full-stack work. I'll
+                                        budget range (if any), and whether you need frontend, backend, or full-stack work. I'll
                                         reply with next steps and availability.
                                     </div>
                                 </div>
@@ -328,7 +672,7 @@
                                         The portfolio fetches public repos from the GitHub API. If you see an error
                                         message, it may be due to rate limits, network issues, or temporary GitHub
                                         downtime. Refresh the page or visit my <a
-                                            href="https://github.com/Umarxiddiqui">GitHub profile</a> directly.
+                                            href="https://github.com/MuhammadHasan440">GitHub profile</a> directly.
                                     </div>
                                 </div>
                             </div>
@@ -342,7 +686,7 @@
                                 <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#supportFaq">
                                     <div class="accordion-body">
                                         See the <a href="privacy-policy.html">Privacy Policy</a> for how contact form
-                                        data, cookies, and third-party links are handled on Umar.dev.
+                                        data, cookies, and third-party links are handled on this site.
                                     </div>
                                 </div>
                             </div>
@@ -357,15 +701,13 @@
         <div class="section-footer-2 position-relative">
             <div class="container position-relative z-1 border-top border-1 pb-2 pt-4">
                 <div class="text-center">
-                    <a class="d-flex main-logo align-items-center justify-content-center mb-3" href="https://umar.dev/">
-                        <img src="assets/imgs/home-page-2/template/favicon.svg" alt="Umar.dev" />
-                        <span class="fs-4 ms-2">Umar.dev</span>
+                    <a class="d-flex main-logo align-items-center justify-content-center mb-3" href="index-2.html">
+                        <img src="assets/imgs/home-page-2/template/favicon_red.svg" alt="Hasan.dev" />
+                        <span class="fs-4 ms-2">Muhammad Hasan</span>
                     </a>
                     <div class="d-flex justify-content-center gap-3">
-                        <a href="http://facebook.com"><i class="ri-facebook-circle-fill fs-18"></i></a>
-                        <a href="http://twitter.com"><i class="ri-twitter-x-fill fs-18"></i></a>
-                        <a href="https://www.linkedin.com/in/umarxiddiqui/"><i class="ri-linkedin-fill fs-18"></i></a>
-                        <a href="https://github.com/Umarxiddiqui"><i class="ri-github-fill fs-18"></i></a>
+                        <a href="https://www.linkedin.com/in/muhammad-hasan-b141b6386"><i class="ri-linkedin-fill fs-18"></i></a>
+                        <a href="https://github.com/MuhammadHasan440"><i class="ri-github-fill fs-18"></i></a>
                     </div>
                     <div class="navigation d-flex align-items-center justify-content-center flex-wrap gap-4 my-4">
                         <a href="index-2.html#about" class="fs-6"> About me </a>
@@ -377,7 +719,7 @@
                         <a href="privacy-policy.html" class="fs-6"> Privacy Policy </a>
                         <a href="support.html" class="fs-6 text-primary-2"> Support </a>
                     </div>
-                    <p class="text-300 fs-7 mb-0">© 2026 <a href="https://umar.dev/" class="text-300 link-hover">Umar.dev</a>. All Rights Reserved.</p>
+                    <p class="text-300 fs-7 mb-0">© 2026 <a href="index-2.html" class="text-300 link-hover">Muhammad Hasan</a>. All Rights Reserved.</p>
                 </div>
             </div>
         </div>
